@@ -29,26 +29,39 @@
         <option value="ARRAY">Array (whitelist)</option>
         <option value="OBJECT">Object (toggles)</option>
       </select>
-      <div class="hint">Seleccionadas: <b>{{ selectedRuleCount() }}</b></div>
+      <div class="hint">
+        Seleccionadas: <b>{{ selectedRuleCount() }}</b>
+      </div>
     </div>
 
     <div class="col actions">
       <button class="btn" type="button" (click)="run()" [disabled]="loading()">
-        {{ loading() ? 'Migrando...' : 'Run migration' }}
+        {{ loading() ? "Migrando..." : "Run migration" }}
       </button>
-      <button class="btn ghost" type="button" (click)="selectAll(true)">Select all</button>
-      <button class="btn ghost" type="button" (click)="selectAll(false)">Select none</button>
+      <button class="btn ghost" type="button" (click)="selectAll(true)">
+        Select all
+      </button>
+      <button class="btn ghost" type="button" (click)="selectAll(false)">
+        Select none
+      </button>
     </div>
   </section>
 
   <section class="card">
     <h2>Legacy input</h2>
-    <textarea class="textarea" rows="10" [formControl]="form.controls.code"></textarea>
+    <textarea
+      class="textarea"
+      rows="10"
+      [formControl]="form.controls.code"
+    ></textarea>
 
     <h3 class="mt">Reglas</h3>
     <div class="rules">
       <label class="rule" *ngFor="let r of rules">
-        <input type="checkbox" [formControl]="form.controls.enabledRules.controls[r.id]" />
+        <input
+          type="checkbox"
+          [formControl]="form.controls.enabledRules.controls[r.id]"
+        />
         <span>{{ r.label }}</span>
       </label>
     </div>
@@ -61,7 +74,9 @@
   <section class="grid2">
     <div class="card">
       <h2>Output (Node.js)</h2>
-      <pre class="code" *ngIf="result() as res; else emptyOut">{{ res.output }}</pre>
+      <pre class="code" *ngIf="result() as res; else emptyOut">{{
+        res.output
+      }}</pre>
       <ng-template #emptyOut>
         <div class="empty">Ejecuta la migración para ver el resultado.</div>
       </ng-template>
@@ -81,7 +96,8 @@
         <h3>Applied rules</h3>
         <div class="block" *ngFor="let rr of res.report.appliedRules">
           <div class="ruleTitle">
-            <b>{{ rr.id }}</b> — {{ rr.name }} <span class="pill">{{ rr.hits }} hit(s)</span>
+            <b>{{ rr.id }}</b> — {{ rr.name }}
+            <span class="pill">{{ rr.hits }} hit(s)</span>
           </div>
           <div class="evidence" *ngFor="let ev of rr.evidence">
             <div class="evLine">L{{ ev.line }}</div>
@@ -109,8 +125,4 @@
       </ng-template>
     </div>
   </section>
-
-  <footer class="footer">
-    Backend esperado: <span class="mono">POST http://localhost:3000/api/migrate</span>
-  </footer>
 </div>

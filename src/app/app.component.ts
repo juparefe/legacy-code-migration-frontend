@@ -12,7 +12,7 @@ const ALL_RULES: { id: RuleId; label: string }[] = [
   { id: 'R5', label: 'R5 SUBTRACT → -=' },
   { id: 'R6', label: 'R6 PERFORM → while/for (heurístico)' },
   { id: 'R7', label: 'R7 EVALUATE → switch/case' },
-  { id: 'R8', label: 'R8 Comentarios → //' }
+  { id: 'R8', label: 'R8 Comentarios → //' },
 ];
 
 @Component({
@@ -20,7 +20,7 @@ const ALL_RULES: { id: RuleId; label: string }[] = [
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   readonly rules = ALL_RULES;
@@ -30,7 +30,7 @@ export class AppComponent {
   readonly result = signal<MigrateResponse | null>(null);
 
   form = this.fb.group({
-    sourceLanguage: this.fb.nonNullable.control<'COBOL'|'DELPHI'>('COBOL'),
+    sourceLanguage: this.fb.nonNullable.control<'COBOL' | 'DELPHI'>('COBOL'),
     targetLanguage: this.fb.nonNullable.control<'NODE'>('NODE'),
     code: this.fb.nonNullable.control<string>(`IF AMOUNT > 0
 DISPLAY "VALID"
@@ -39,15 +39,18 @@ DISPLAY "INVALID"
 END-IF`),
 
     // Modo de envío de reglas: array de ids o objeto con toggles
-    ruleMode: this.fb.nonNullable.control<'ARRAY'|'OBJECT'>('ARRAY'),
+    ruleMode: this.fb.nonNullable.control<'ARRAY' | 'OBJECT'>('ARRAY'),
 
     // Por simplicidad, un toggle por regla. Si no se selecciona ninguna, se envían todas.
     enabledRules: this.fb.nonNullable.group(
-      ALL_RULES.reduce((acc, r) => {
-        acc[r.id] = this.fb.nonNullable.control(true);
-        return acc;
-      }, {} as Record<RuleId, any>)
-    )
+      ALL_RULES.reduce(
+        (acc, r) => {
+          acc[r.id] = this.fb.nonNullable.control(true);
+          return acc;
+        },
+        {} as Record<RuleId, any>,
+      ),
+    ),
   });
 
   selectedRuleCount = computed(() => {
@@ -55,7 +58,10 @@ END-IF`),
     return Object.values(v).filter(Boolean).length;
   });
 
-  constructor(private fb: FormBuilder, private api: MigrateApiService) {}
+  constructor(
+    private fb: FormBuilder,
+    private api: MigrateApiService,
+  ) {}
 
   buildRulesPayload(): RuleToggle {
     const enabled = this.form.getRawValue().enabledRules;
@@ -65,9 +71,8 @@ END-IF`),
       .map(([id]) => id as RuleId);
 
     // En la opcion de array si no seleccionó ninguna, enviamos todas
-    const finalIds = enabledIds.length > 0
-      ? enabledIds
-      : this.rules.map(r => r.id);
+    const finalIds =
+      enabledIds.length > 0 ? enabledIds : this.rules.map((r) => r.id);
 
     if (this.form.getRawValue().ruleMode === 'ARRAY') {
       return finalIds;
@@ -95,7 +100,7 @@ END-IF`),
       sourceLanguage: raw.sourceLanguage,
       targetLanguage: raw.targetLanguage,
       code: raw.code,
-      rules: this.buildRulesPayload()
+      rules: this.buildRulesPayload(),
     };
 
     this.loading.set(true);
@@ -106,12 +111,35 @@ END-IF`),
       },
       error: (err) => {
         this.loading.set(false);
+        const isNetworkError = err?.status === 0;
+        if (isNetworkError) {
+          const isOffline =
+            typeof navigator !== 'undefined' && navigator.onLine === false;
+
+          this.errorMsg.set(
+            isOffline
+              ? 'No tienes conexión a internet.'
+              : `No se pudo conectar al backend. Verifica que el servidor esté levantado y accesible.`,
+          );
+          return;
+        }
+
+        // Errores HTTP reales (400/500 etc.)
         const msg =
           err?.error?.message ||
-          err?.message ||
-          'Error llamando al backend. Revisa que esté corriendo en localhost:3000';
+          (Array.isArray(err?.error?.issues)
+            ? this.formatZodIssues(err.error.issues)
+            : null) ||
+          `Error ${err.status}: ${err.statusText || 'Request failed'}`;
+
         this.errorMsg.set(msg);
-      }
+      },
     });
+  }
+
+  private formatZodIssues(issues: any[]): string {
+    return issues
+      .map(i => `• ${i.path?.join('.') || 'field'}: ${i.message}`)
+      .join('\n');
   }
 }
