@@ -38,10 +38,10 @@ ELSE
 DISPLAY "INVALID"
 END-IF`),
 
-    // modo de envío: array (whitelist) o object (toggles)
+    // Modo de envío de reglas: array de ids o objeto con toggles
     ruleMode: this.fb.nonNullable.control<'ARRAY'|'OBJECT'>('ARRAY'),
 
-    // toggles UI
+    // Por simplicidad, un toggle por regla. Si no se selecciona ninguna, se envían todas.
     enabledRules: this.fb.nonNullable.group(
       ALL_RULES.reduce((acc, r) => {
         acc[r.id] = this.fb.nonNullable.control(true);
@@ -64,11 +64,16 @@ END-IF`),
       .filter(([, isOn]) => isOn)
       .map(([id]) => id as RuleId);
 
+    // En la opcion de array si no seleccionó ninguna, enviamos todas
+    const finalIds = enabledIds.length > 0
+      ? enabledIds
+      : this.rules.map(r => r.id);
+
     if (this.form.getRawValue().ruleMode === 'ARRAY') {
-      return enabledIds; // whitelist
+      return finalIds;
     }
 
-    // object toggles
+    // En modo objeto, enviamos un objeto con true/false. Si no se seleccionó ninguna, enviamos todas como true
     const obj: Partial<Record<RuleId, boolean>> = {};
     for (const r of this.rules) obj[r.id] = !!enabled[r.id];
     return obj;
