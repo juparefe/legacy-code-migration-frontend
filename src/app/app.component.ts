@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormControl } from '@angular/forms';
 import { MigrateApiService } from './migrate-api.service';
 import { MigrateResponse, RuleId, RuleToggle } from './types';
 
@@ -48,7 +48,7 @@ END-IF`),
           acc[r.id] = this.fb.nonNullable.control(true);
           return acc;
         },
-        {} as Record<RuleId, any>,
+        {} as Record<RuleId, FormControl<boolean>>,
       ),
     ),
   });
@@ -124,7 +124,6 @@ END-IF`),
           return;
         }
 
-        // Errores HTTP reales (400/500 etc.)
         const msg =
           err?.error?.message ||
           (Array.isArray(err?.error?.issues)
@@ -137,7 +136,7 @@ END-IF`),
     });
   }
 
-  private formatZodIssues(issues: any[]): string {
+  private formatZodIssues(issues: { path?: (string | number)[]; message: string }[]): string {
     return issues
       .map(i => `• ${i.path?.join('.') || 'field'}: ${i.message}`)
       .join('\n');
