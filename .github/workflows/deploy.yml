@@ -37,7 +37,7 @@ jobs:
 
       - name: Sync to S3 (to prefix)
         run: |
-          aws s3 sync dist/ s3://legacy-migration-code-frontend/legacy-code-migration-frontend/ --delete
+          aws s3 sync dist/ s3://legacy-migration-code-frontend/ --delete
 
       - name: Invalidate CloudFront
         run: |
