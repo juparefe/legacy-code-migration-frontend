@@ -9,23 +9,23 @@
 
   <section class="card grid">
     <div class="col">
-      <label class="label">Source language</label>
-      <select class="input" [formControl]="form.controls.sourceLanguage">
+      <label class="label" for="sourceLanguage">Source language</label>
+      <select id="sourceLanguage" class="input" [formControl]="form.controls.sourceLanguage">
         <option value="COBOL">COBOL</option>
         <option value="DELPHI">Delphi (placeholder)</option>
       </select>
     </div>
 
     <div class="col">
-      <label class="label">Target language</label>
-      <select class="input" [formControl]="form.controls.targetLanguage">
+      <label class="label" for="targetLanguage">Target language</label>
+      <select id="targetLanguage" class="input" [formControl]="form.controls.targetLanguage">
         <option value="NODE">Node.js</option>
       </select>
     </div>
 
     <div class="col">
-      <label class="label">Rules payload mode</label>
-      <select class="input" [formControl]="form.controls.ruleMode">
+      <label class="label" for="ruleMode">Rules payload mode</label>
+      <select id="ruleMode" class="input" [formControl]="form.controls.ruleMode">
         <option value="ARRAY">Array (whitelist)</option>
         <option value="OBJECT">Object (toggles)</option>
       </select>
