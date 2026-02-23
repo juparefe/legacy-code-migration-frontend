@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormControl } from '@angular/forms';
 import { MigrateApiService } from './migrate-api.service';
@@ -53,10 +53,10 @@ END-IF`),
     ),
   });
 
-  selectedRuleCount = computed(() => {
-    const v = this.form.getRawValue().enabledRules;
+  selectedRuleCount(): number {
+    const v = this.form.controls.enabledRules.getRawValue();
     return Object.values(v).filter(Boolean).length;
-  });
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -141,4 +141,10 @@ END-IF`),
       .map(i => `• ${i.path?.join('.') || 'field'}: ${i.message}`)
       .join('\n');
   }
+
+  hitMapping: Record<string, string> = {
+    '=0': '0 veces',
+    '=1': '1 vez',
+    other: '# veces'
+  };
 }

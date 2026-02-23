@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "legacy-code-migration-frontend:build:production"
+              "buildTarget": "legacy-code-migration-frontend:build:production"
             },
             "development": {
-              "browserTarget": "legacy-code-migration-frontend:build:development"
+              "buildTarget": "legacy-code-migration-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -88,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "legacy-code-migration-frontend:build"
+            "buildTarget": "legacy-code-migration-frontend:build"
           }
         },
         "test": {
