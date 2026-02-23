@@ -1,27 +1,39 @@
-# LegacyCodeMigrationFrontend
+# Legacy Code Migration Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.3.
+Este es el repositorio frontend de la aplicacion web para la migracion de codigo legacy, proporciona una interfaz de usuario para interactuar con el backend del sistema.
+## Requisitos Previos
 
-## Development server
+Asegúrate de tener instalado lo siguiente:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Node.js: [Descargar Node.js](https://nodejs.org/)
+- npm (administrador de paquetes de Node.js): Viene incluido con Node.js
+- Angular CLI: Instálalo globalmente con `npm install -g @angular/cli`
 
-## Code scaffolding
+**Lenguajes utilizados:** TypeScript  
+**Frameworks, herramientas o librerias utilizados:** Angular
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Scripts Disponibles
+* Instalar Dependencias: `npm install`
+* Construir la Aplicación: `npm run build`
+* Construir la Aplicación en produccion: `npm run build:prod`
+* Construir la Aplicación en produccion ofuscando el codigo: `npm run build:prod:obf`
+* Revisar el codigo: `npm run lint`
+* Correr los test unitarios y ver cobertura: `npm run test`
+* Iniciar la Aplicación: `npm start`
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Paso a paso para ejecutar el repositorio
+Para poder utilizar este repositorio debes seguir estas instrucciones y luego dirigirte al [Repositorio Legacy Code Migration Backend](https://github.com/juparefe/legacy-code-migration-backend) y seguir las instrucciones para levantar el complemento de la aplicacion
+* Clonar el repositorio en el entorno local utilizando el comando 
+```
+git clone https://github.com/juparefe/legacy-code-migration-frontend.git
+```
+* Abrir la carpeta clonada utilizando algun editor de codigo
+* Instala las dependencias:
+```
+npm install
+```
+* Ejecuta el siguiente comando para iniciar el servidor:
+```
+npm start
+```
+Por defecto la aplicacion se levanta en el puerto [4200](http://localhost:4200/)
