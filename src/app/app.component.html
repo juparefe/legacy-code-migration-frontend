@@ -2,53 +2,53 @@
   <header class="header">
     <div>
       <h1>Legacy Code Migration</h1>
-      <p class="sub">COBOL/Delphi → Node.js (reglas activables + reporte)</p>
+      <p class="sub">COBOL/Delphi → Java, Node.js, Python o Go</p>
     </div>
     <div class="badge">Kata Senior</div>
   </header>
 
   <section class="card grid">
     <div class="col">
-      <label class="label" for="sourceLanguage">Source language</label>
+      <label class="label" for="sourceLanguage">Lenguaje de origen</label>
       <select id="sourceLanguage" class="input" [formControl]="form.controls.sourceLanguage">
         <option value="COBOL">COBOL</option>
-        <option value="DELPHI">Delphi (placeholder)</option>
+        <option value="DELPHI">Delphi</option>
       </select>
     </div>
 
     <div class="col">
-      <label class="label" for="targetLanguage">Target language</label>
+      <label class="label" for="targetLanguage">Lenguaje de destino</label>
       <select id="targetLanguage" class="input" [formControl]="form.controls.targetLanguage">
         <option value="NODE">Node.js</option>
       </select>
     </div>
 
     <div class="col">
-      <label class="label" for="ruleMode">Rules payload mode</label>
+      <label class="label" for="ruleMode">Modo de enviar las reglas</label>
       <select id="ruleMode" class="input" [formControl]="form.controls.ruleMode">
         <option value="ARRAY">Array (whitelist)</option>
         <option value="OBJECT">Object (toggles)</option>
       </select>
       <div class="hint">
-        Seleccionadas: <b>{{ selectedRuleCount() }}</b>
+        Reglas seleccionadas: <b>{{ selectedRuleCount() }}</b>
       </div>
     </div>
 
     <div class="col actions">
       <button class="btn" type="button" (click)="run()" [disabled]="loading()">
-        {{ loading() ? "Migrando..." : "Run migration" }}
+        {{ loading() ? "Migrando..." : "Correr migración" }}
       </button>
       <button class="btn ghost" type="button" (click)="selectAll(true)">
-        Select all
+        Seleccionar todas las reglas
       </button>
       <button class="btn ghost" type="button" (click)="selectAll(false)">
-        Select none
+        Deseleccionar todas las reglas
       </button>
     </div>
   </section>
 
   <section class="card">
-    <h2>Legacy input</h2>
+    <h2>Legacy Input a migrar</h2>
     <textarea
       class="textarea"
       rows="10"
@@ -73,7 +73,7 @@
 
   <section class="grid2">
     <div class="card">
-      <h2>Output (Node.js)</h2>
+      <h2>Codigo migrado</h2>
       <pre class="code" *ngIf="result() as res; else emptyOut">{{
         res.output
       }}</pre>
@@ -83,21 +83,23 @@
     </div>
 
     <div class="card">
-      <h2>Report</h2>
+      <h2>Reporte de reglas aplicadas</h2>
 
       <ng-container *ngIf="result() as res; else emptyRep">
         <div class="summary">
-          <div><b>Lines in:</b> {{ res.report.summary.linesIn }}</div>
-          <div><b>Lines out:</b> {{ res.report.summary.linesOut }}</div>
-          <div><b>Rules applied:</b> {{ res.report.summary.rulesApplied }}</div>
+          <div><b>Lines enviadas:</b> {{ res.report.summary.linesIn }}</div>
+          <div><b>Lineas recibidas:</b> {{ res.report.summary.linesOut }}</div>
+          <div><b>Numero de reglas aplicadas:</b> {{ res.report.summary.rulesApplied }}</div>
           <div><b>Warnings:</b> {{ res.report.summary.warnings }}</div>
         </div>
 
-        <h3>Applied rules</h3>
+        <h3>Reglas aplicadas</h3>
         <div class="block" *ngFor="let rr of res.report.appliedRules">
           <div class="ruleTitle">
             <b>{{ rr.id }}</b> — {{ rr.name }}
-            <span class="pill">{{ rr.hits }} hit(s)</span>
+            <span class="pill">
+              {{ rr.hits | i18nPlural: hitMapping }}
+            </span>
           </div>
           <div class="evidence" *ngFor="let ev of rr.evidence">
             <div class="evLine">L{{ ev.line }}</div>
